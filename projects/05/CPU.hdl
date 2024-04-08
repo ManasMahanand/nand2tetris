@@ -32,5 +32,38 @@ CHIP CPU {
         pc[15];          // Address of next instruction
 
     PARTS:
-    //// Replace this comment with your code.
+    Mux16(a=instruction, b=aluOut, sel=instruction[15], out=aRegisterIn);
+
+    Not(in=instruction[15], out=notCInstruction);
+    And(a=instruction[15], b=instruction[5], out=CInstructionLoadARegister);
+    Or(a=notCInstruction, b=CInstructionLoadARegister, out=loadARegister);
+    ARegister(in=aRegisterIn, load=loadARegister, out=aRegisterOut, out[0..14]=addressM);
+
+    And(a=instruction[15], b=instruction[4], out=loadDRegister);
+    DRegister(in=aluOut, load=loadDRegister, out=dRegisterOut);
+
+    And(a=instruction[15], b=instruction[12], out=readM);
+    Mux16(a=aRegisterOut, b=inM, sel=readM, out=aluYIn);
+
+    And(a=instruction[15], b=instruction[11], out=zx);
+    And(a=instruction[15], b=instruction[10], out=nx);
+    And(a=instruction[15], b=instruction[9], out=zy);
+    And(a=instruction[15], b=instruction[8], out=ny);
+    And(a=instruction[15], b=instruction[7], out=f);
+    And(a=instruction[15], b=instruction[6], out=no);
+    ALU(x=dRegisterOut, y=aluYIn, zx=instruction[11], nx=instruction[10], zy=instruction[9], ny=instruction[8], f=instruction[7], no=instruction[6], out=aluOut, out=outM, zr=aluZR, ng=aluNG);
+    And(a=instruction[3], b=instruction[15], out=writeM);
+
+    And(a=aluNG, b=instruction[2], out=j1);
+    And(a=aluZR, b=instruction[1], out=j2);
+    Not(in=aluNG, out=NotJ1);
+    Not(in=aluZR, out=NotJ2);
+    And(a=NotJ1, b=NotJ2, out=NotJ1AndNotJ2);
+    And(a=NotJ1AndNotJ2, b=instruction[0], out=j3);
+
+    Or(a=j1, b=j2, out=j1OrJ2);
+    Or(a=j1OrJ2, b=j3, out=j1OrJ2OrJ3);
+
+    And(a=instruction[15], b=j1OrJ2OrJ3, out=loadPC);
+    PC(in=aRegisterOut, reset=reset, load=loadPC, inc=true, out[0..14]=pc);
 }
