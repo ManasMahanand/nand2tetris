@@ -11,7 +11,7 @@ My current progress:
 - [x] Project 3: Memory (Build the RAM chip)
 - [x] Project 4: Machine Language (Understanding the specifications of Hack Machine language - the machine language for the built machine)
 - [x] Project 5: Computer Architecture (Building a working Computer along with CPU and RAM)
-- [ ] Project 6: Assembler - working on this currently :)
+- [x] Project 6: Assembler
 - [ ] Project 7: VM I: Stack Arithmetic
 - [ ] Project 8: VM II: Program Control
 - [ ] Project 9: High-Level Language
@@ -45,3 +45,8 @@ So instead do the following to see how the computer would run:
 You may be asking why can't I run Pong on the computer I have built... unfortunately since the Hardware simulator is literally simulating every single binary operation in Java, it makes the process very slow taking up lot of real RAM.
 
 But you can feel free to check every chipset I've built in HDL from project 01 to project 05, all of these work!
+
+## Try the Assembler:
+
+1. Navigate to /projects/06/hack_assembler
+2. Run "cargo run <input file name> <output file name> (You will need to have Rust installed)
